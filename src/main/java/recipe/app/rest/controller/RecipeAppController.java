@@ -49,8 +49,7 @@ public class RecipeAppController {
 //	
 	@PostMapping(path = "recipe/recipeLOCAL", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<?> saveRecipe (Recipe newRecipe) {
-		
-		if (newRecipe.getMultiPartRecipeImage().getSize() != 0l) {
+		if (newRecipe.getMultiPartRecipeImage() != null && newRecipe.getMultiPartRecipeImage().getSize() != 0l) {
 			try {
 				newRecipe.setRecipeImage(newRecipe.getMultiPartRecipeImage().getBytes());
 			} catch (IOException e) {
@@ -60,13 +59,8 @@ public class RecipeAppController {
 		}
 		
 		Recipe savedRecipe = recipeRepository.save(newRecipe);
-		String base64RecipeImage = Base64.getEncoder().encodeToString(savedRecipe.getRecipeImage());
-		 
-		 //savedRecipe.setRecipeImage(null);
 		 savedRecipe.setMultiPartRecipeImage(null);
-		// savedRecipe.setBase64RecipeImage(base64RecipeImage);
-		
-		
+		 
 		Link selfLink = linkTo(methodOn(RecipeAppController.class)
 			      .saveRecipe(newRecipe)).withSelfRel();
 		
